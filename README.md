@@ -1,2 +1,2 @@
 # grade-de-horarios
-grade de horários
+grade de horarios
