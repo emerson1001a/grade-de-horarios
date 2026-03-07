@@ -159,7 +159,7 @@
 
     .cards{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,1fr);
       gap:14px;
       margin:18px 0 20px;
     }
@@ -255,7 +255,26 @@
       line-height:1.5;
     }
 
-    @media (max-width: 800px){
+    .legend{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+    }
+
+    .pill-ok{background:#dcfce7;color:#166534}
+    .pill-warn{background:#fef3c7;color:#92400e}
+    .pill-bad{background:#fee2e2;color:#991b1b}
+
+    @media (max-width: 900px){
       .cards, .tema-boxes{
         grid-template-columns:1fr;
       }
@@ -274,18 +293,21 @@
       <h1>Science BIS Test — Cells</h1>
       <p>
         Answer the questions and click <strong>Check Test</strong>.
-        At the end, the system will show score, performance by topic,
-        a diagnostic and what the student should review.
       </p>
+      <div class="legend">
+        <span class="pill pill-ok">Acerto = domina</span>
+        <span class="pill pill-bad">Erro = conceito confuso</span>
+        <span class="pill pill-warn">Don't know = precisa estudar</span>
+      </div>
     </div>
 
     <div class="student-box">
-      <label for="studentName">Student name</label>
-      <input id="studentName" type="text" placeholder="Type the student's name" />
+      <label for="studentName">Nome do aluno</label>
+      <input id="studentName" type="text" placeholder="Digite o nome do aluno" />
     </div>
 
-    <h2 class="section-title">Part 1 — True or False</h2>
-    <p class="subtitle">Mark T for true and F for false.</p>
+    <h2 class="section-title">Part 1 — True / False / Don't know</h2>
+    <p class="subtitle">Choose the best option.</p>
     <div id="tf"></div>
 
     <h2 class="section-title">Part 2 — Multiple Choice</h2>
@@ -294,7 +316,7 @@
 
     <div class="acoes">
       <button class="btn-primary" onclick="corrigir()">Check Test</button>
-      <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+      <button class="btn-secondary" onclick="window.print()">Imprimir / Salvar PDF</button>
     </div>
 
     <div id="resultado"></div>
@@ -528,6 +550,7 @@
             <strong>${i + 1}. ${q.texto}</strong>
             <label class="opcao"><input type="radio" name="tf${i}" value="T"> True</label>
             <label class="opcao"><input type="radio" name="tf${i}" value="F"> False</label>
+            <label class="opcao"><input type="radio" name="tf${i}" value="D"> Don't know</label>
           </div>
         `;
       });
@@ -551,55 +574,71 @@
       });
     }
 
-    function diagnosticoGeral(percentual) {
+    function diagnosticoGeral(percentual, unknownCount, wrongCount) {
       if (percentual < 40) {
         return {
           classe: "tag-bad",
-          rotulo: "Needs strong review",
-          texto: "The student still has major gaps in the topic. It is important to review basic cell concepts, cell parts, specialised cells and levels of organisation."
+          rotulo: "Precisa estudar bastante",
+          texto: "O aluno ainda apresenta muitas lacunas no conteúdo. É importante revisar conceitos básicos de células, partes da célula, células especializadas e níveis de organização."
+        };
+      } else if (unknownCount > wrongCount && unknownCount >= 4) {
+        return {
+          classe: "tag-warn",
+          rotulo: "Precisa estudar a matéria",
+          texto: "O aluno marcou vários pontos como 'Don't know', o que mostra que ainda não estudou bem parte do conteúdo. O ideal é revisar a matéria de forma estruturada antes da prova."
         };
       } else if (percentual < 70) {
         return {
           classe: "tag-warn",
-          rotulo: "Partial understanding",
-          texto: "The student understands part of the content, but there are still important weaknesses. A focused review is recommended before moving on."
+          rotulo: "Entendimento parcial",
+          texto: "O aluno entende parte da matéria, mas ainda existem pontos importantes que precisam ser revisados antes da prova."
         };
       } else if (percentual < 90) {
         return {
           classe: "tag-ok",
-          rotulo: "Good understanding",
-          texto: "The student shows good understanding of the topic, with a few gaps that can be fixed through revision and practice."
+          rotulo: "Bom entendimento",
+          texto: "O aluno demonstra bom entendimento do conteúdo, com pequenas lacunas que podem ser corrigidas com revisão."
         };
       } else {
         return {
           classe: "tag-ok",
-          rotulo: "Excellent performance",
-          texto: "The student shows strong understanding of cells, specialised cells and levels of organisation."
+          rotulo: "Excelente desempenho",
+          texto: "O aluno demonstra domínio muito bom do conteúdo sobre células e organização dos seres vivos."
         };
       }
     }
 
-    function sugestaoPorTema(tema, perc) {
-      if (perc >= 70) {
-        return "This topic is reasonably secure. A short review should be enough.";
+    function sugestaoPorTema(tema, perc, wrong, unknown) {
+      if (unknown > wrong && unknown > 0) {
+        if (tema === "Basic cell theory") return "Estudar do zero o que são células, por que os seres vivos são formados por células e para que serve o microscópio.";
+        if (tema === "Cell parts and functions") return "Revisar com calma as funções de nucleus, cytoplasm e cell membrane.";
+        if (tema === "Plant and animal cells") return "Estudar com atenção as diferenças entre plant cells e animal cells, principalmente cell wall, chloroplasts, chlorophyll e vacuole.";
+        if (tema === "Specialised cells") return "Estudar do zero os nomes e as funções das specialised cells.";
+        if (tema === "Levels of organisation") return "Memorizar e entender bem a sequência cells → tissues → organs → organ systems → organism.";
       }
 
-      if (tema === "Basic cell theory") return "Review what cells are, why living things are made of cells and why microscopes are needed.";
-      if (tema === "Cell parts and functions") return "Review nucleus, cytoplasm and cell membrane, focusing on the function of each part.";
-      if (tema === "Plant and animal cells") return "Review the differences between plant and animal cells, especially cell wall, chloroplasts, chlorophyll and vacuole.";
-      if (tema === "Specialised cells") return "Revise red blood cells, neurones, ciliated cells, root hair cells and palisade cells, with focus on their functions.";
-      if (tema === "Levels of organisation") return "Review the sequence cells → tissues → organs → organ systems → organism and the meaning of tissue, organ and organ system.";
-      return "Review this topic with examples.";
+      if (perc >= 70) {
+        return "Tema razoavelmente seguro. Uma revisão curta deve ser suficiente.";
+      }
+
+      if (tema === "Basic cell theory") return "Revisar o que são células, por que todos os seres vivos são formados por células e por que o microscópio é necessário.";
+      if (tema === "Cell parts and functions") return "Revisar nucleus, cytoplasm e cell membrane, focando na função de cada um.";
+      if (tema === "Plant and animal cells") return "Revisar as diferenças entre plant cells e animal cells, especialmente cell wall, chloroplasts, chlorophyll e vacuole.";
+      if (tema === "Specialised cells") return "Revisar red blood cells, neurones, ciliated cells, root hair cells e palisade cells, com foco nas funções.";
+      if (tema === "Levels of organisation") return "Revisar a sequência cells → tissues → organs → organ systems → organism e o significado de tissue, organ e organ system.";
+      return "Revisar esse tema com exemplos.";
     }
 
     function corrigir() {
-      let acertos = 0;
+      let correct = 0;
+      let wrong = 0;
+      let dontKnow = 0;
       let total = tfPerguntas.length + multiplaPerguntas.length;
       let errosLista = [];
       let desempenhoTema = {};
 
       temas.forEach(t => {
-        desempenhoTema[t] = { certas: 0, total: 0 };
+        desempenhoTema[t] = { correct: 0, wrong: 0, unknown: 0, total: 0 };
       });
 
       tfPerguntas.forEach((q, i) => {
@@ -607,14 +646,25 @@
         const marcada = document.querySelector(`input[name="tf${i}"]:checked`);
 
         if (marcada && marcada.value === q.resposta) {
-          acertos++;
-          desempenhoTema[q.tema].certas++;
-        } else {
-          const respostaAluno = marcada ? marcada.value : "No answer";
+          correct++;
+          desempenhoTema[q.tema].correct++;
+        } else if (marcada && marcada.value === "D") {
+          dontKnow++;
+          desempenhoTema[q.tema].unknown++;
           errosLista.push(`
             <li>
               <strong>True/False ${i + 1}:</strong> ${q.texto}<br>
-              <span class="small">Student answer: <b>${respostaAluno}</b> | Correct answer: <b>${q.resposta}</b></span>
+              <span class="small">Resposta do aluno: <b>Don't know</b> | Resposta correta: <b>${q.resposta === "T" ? "True" : "False"}</b></span>
+            </li>
+          `);
+        } else {
+          wrong++;
+          desempenhoTema[q.tema].wrong++;
+          const respostaAluno = marcada ? (marcada.value === "T" ? "True" : "False") : "Não respondeu";
+          errosLista.push(`
+            <li>
+              <strong>True/False ${i + 1}:</strong> ${q.texto}<br>
+              <span class="small">Resposta do aluno: <b>${respostaAluno}</b> | Resposta correta: <b>${q.resposta === "T" ? "True" : "False"}</b></span>
             </li>
           `);
         }
@@ -625,26 +675,29 @@
         const marcada = document.querySelector(`input[name="m${i}"]:checked`);
 
         if (marcada && Number(marcada.value) === q.correta) {
-          acertos++;
-          desempenhoTema[q.tema].certas++;
+          correct++;
+          desempenhoTema[q.tema].correct++;
         } else {
+          wrong++;
+          desempenhoTema[q.tema].wrong++;
+
           const respostaAluno = marcada
             ? `${String.fromCharCode(65 + Number(marcada.value))}) ${q.alternativas[Number(marcada.value)]}`
-            : "No answer";
+            : "Não respondeu";
 
           const respostaCorreta = `${String.fromCharCode(65 + q.correta)}) ${q.alternativas[q.correta]}`;
 
           errosLista.push(`
             <li>
-              <strong>Multiple Choice ${i + 1}:</strong> ${q.texto}<br>
-              <span class="small">Student answer: <b>${respostaAluno}</b><br>Correct answer: <b>${respostaCorreta}</b></span>
+              <strong>Múltipla escolha ${i + 1}:</strong> ${q.texto}<br>
+              <span class="small">Resposta do aluno: <b>${respostaAluno}</b><br>Resposta correta: <b>${respostaCorreta}</b></span>
             </li>
           `);
         }
       });
 
-      const percentual = Math.round((acertos / total) * 100);
-      const diag = diagnosticoGeral(percentual);
+      const percentual = Math.round((correct / total) * 100);
+      const diag = diagnosticoGeral(percentual, dontKnow, wrong);
 
       let temasHtml = "";
       let topicosParaEstudar = [];
@@ -653,31 +706,34 @@
         const dados = desempenhoTema[tema];
         if (!dados || dados.total === 0) return;
 
-        const percTema = Math.round((dados.certas / dados.total) * 100);
+        const percTema = Math.round((dados.correct / dados.total) * 100);
 
-        if (percTema < 70) {
-          topicosParaEstudar.push(`${tema}: ${sugestaoPorTema(tema, percTema)}`);
+        if (percTema < 70 || dados.unknown > 0) {
+          topicosParaEstudar.push(
+            `${tema}: ${sugestaoPorTema(tema, percTema, dados.wrong, dados.unknown)}`
+          );
         }
 
         temasHtml += `
           <div class="tema-box">
             <h4>${tema}</h4>
-            <p><strong>${dados.certas} of ${dados.total}</strong> • ${percTema}% success</p>
-            <p>${sugestaoPorTema(tema, percTema)}</p>
+            <p><strong>${dados.correct} de ${dados.total}</strong> • ${percTema}% de aproveitamento</p>
+            <p class="small">Erros: <b>${dados.wrong}</b> • Não sei: <b>${dados.unknown}</b></p>
+            <p>${sugestaoPorTema(tema, percTema, dados.wrong, dados.unknown)}</p>
           </div>
         `;
       });
 
       let errosHtml = "";
       if (errosLista.length === 0) {
-        errosHtml = `<p class="small">No mistakes. Excellent work.</p>`;
+        errosHtml = `<p class="small">Nenhum erro. Excelente resultado.</p>`;
       } else {
         errosHtml = `<ul>${errosLista.join("")}</ul>`;
       }
 
       let topicosHtml = "";
       if (topicosParaEstudar.length === 0) {
-        topicosHtml = `<p class="small">There are no critical weak points. The student has a strong foundation.</p>`;
+        topicosHtml = `<p class="small">Não há fragilidades relevantes. O aluno está com a base bem construída.</p>`;
       } else {
         topicosHtml = `<ul>${topicosParaEstudar.map(t => `<li>${t}</li>`).join("")}</ul>`;
       }
@@ -686,48 +742,52 @@
       const resultadoDiv = document.getElementById("resultado");
       resultadoDiv.style.display = "block";
       resultadoDiv.innerHTML = `
-        <h2>Student Result${studentName ? ` — ${studentName}` : ""}</h2>
+        <h2>Resultado do aluno${studentName ? ` — ${studentName}` : ""}</h2>
 
         <span class="tag ${diag.classe}">${diag.rotulo}</span>
 
         <div class="cards">
           <div class="mini-card">
-            <h3>Correct Answers</h3>
-            <div class="valor">${acertos}/${total}</div>
+            <h3>Acertos</h3>
+            <div class="valor">${correct}</div>
           </div>
           <div class="mini-card">
-            <h3>Performance</h3>
+            <h3>Erros</h3>
+            <div class="valor">${wrong}</div>
+          </div>
+          <div class="mini-card">
+            <h3>Não sei</h3>
+            <div class="valor">${dontKnow}</div>
+          </div>
+          <div class="mini-card">
+            <h3>Desempenho</h3>
             <div class="valor">${percentual}%</div>
           </div>
           <div class="mini-card">
-            <h3>Reading</h3>
+            <h3>Leitura pedagógica</h3>
             <div class="valor" style="font-size:18px;">${diag.rotulo}</div>
-          </div>
-          <div class="mini-card">
-            <h3>Topic</h3>
-            <div class="valor" style="font-size:18px;">Cells</div>
           </div>
         </div>
 
         <div class="diagnostico">
-          <strong>General diagnostic:</strong><br>
+          <strong>Diagnóstico geral:</strong><br>
           ${diag.texto}
         </div>
 
         <div class="topicos">
-          <h3>What the student needs to review</h3>
+          <h3>O que o aluno precisa estudar para a prova</h3>
           ${topicosHtml}
         </div>
 
         <div class="topicos">
-          <h3>Performance by topic</h3>
+          <h3>Desempenho por tema</h3>
           <div class="tema-boxes">
             ${temasHtml}
           </div>
         </div>
 
         <div class="erros">
-          <h3>Wrong or unanswered questions</h3>
+          <h3>Questões erradas ou marcadas como "Don't know"</h3>
           ${errosHtml}
         </div>
       `;
