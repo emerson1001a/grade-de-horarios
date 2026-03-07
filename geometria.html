@@ -174,7 +174,7 @@
 
     .topicos ul, .erros ul{
       margin:10px 0 0 20px;
-      line-height:1.6;
+      line-height:1.8;
     }
 
     .tag{
@@ -268,7 +268,7 @@
       <p>
         Responda as questões e clique em <strong>Corrigir prova</strong>.
         No final, o sistema mostrará desempenho, diagnóstico, temas que precisam de revisão
-        e as questões erradas ou não respondidas.
+        e as questões erradas com a resposta correta.
       </p>
     </div>
 
@@ -292,26 +292,8 @@
     function figTriangle(){
       return `
       <div class="figura">
-        <svg width="160" height="120" viewBox="0 0 160 120" aria-label="Triângulo">
+        <svg width="160" height="120" viewBox="0 0 160 120">
           <polygon points="80,15 20,100 140,100" fill="none" stroke="#111827" stroke-width="4"/>
-        </svg>
-      </div>`;
-    }
-
-    function figSquare(){
-      return `
-      <div class="figura">
-        <svg width="140" height="140" viewBox="0 0 140 140" aria-label="Quadrado">
-          <rect x="20" y="20" width="100" height="100" fill="none" stroke="#111827" stroke-width="4"/>
-        </svg>
-      </div>`;
-    }
-
-    function figRectangle(){
-      return `
-      <div class="figura">
-        <svg width="180" height="120" viewBox="0 0 180 120" aria-label="Retângulo">
-          <rect x="20" y="20" width="140" height="80" fill="none" stroke="#111827" stroke-width="4"/>
         </svg>
       </div>`;
     }
@@ -319,7 +301,7 @@
     function figPentagon(){
       return `
       <div class="figura">
-        <svg width="160" height="140" viewBox="0 0 160 140" aria-label="Pentágono">
+        <svg width="160" height="140" viewBox="0 0 160 140">
           <polygon points="80,12 22,55 42,122 118,122 138,55" fill="none" stroke="#111827" stroke-width="4"/>
         </svg>
       </div>`;
@@ -328,7 +310,7 @@
     function figHexagon(){
       return `
       <div class="figura">
-        <svg width="170" height="140" viewBox="0 0 170 140" aria-label="Hexágono">
+        <svg width="170" height="140" viewBox="0 0 170 140">
           <polygon points="45,18 125,18 160,70 125,122 45,122 10,70" fill="none" stroke="#111827" stroke-width="4"/>
         </svg>
       </div>`;
@@ -337,7 +319,7 @@
     function figCircle(){
       return `
       <div class="figura">
-        <svg width="140" height="140" viewBox="0 0 140 140" aria-label="Círculo">
+        <svg width="140" height="140" viewBox="0 0 140 140">
           <circle cx="70" cy="70" r="45" fill="none" stroke="#111827" stroke-width="4"/>
         </svg>
       </div>`;
@@ -346,7 +328,7 @@
     function figSegment(){
       return `
       <div class="figura">
-        <svg width="220" height="70" viewBox="0 0 220 70" aria-label="Segmento de reta">
+        <svg width="220" height="70" viewBox="0 0 220 70">
           <line x1="30" y1="35" x2="190" y2="35" stroke="#111827" stroke-width="4"/>
           <circle cx="30" cy="35" r="5" fill="#111827"/>
           <circle cx="190" cy="35" r="5" fill="#111827"/>
@@ -357,7 +339,7 @@
     function figRay(){
       return `
       <div class="figura">
-        <svg width="240" height="70" viewBox="0 0 240 70" aria-label="Semirreta">
+        <svg width="240" height="70" viewBox="0 0 240 70">
           <line x1="35" y1="35" x2="205" y2="35" stroke="#111827" stroke-width="4"/>
           <circle cx="35" cy="35" r="5" fill="#111827"/>
           <polygon points="205,35 190,27 190,43" fill="#111827"/>
@@ -368,7 +350,7 @@
     function figLine(){
       return `
       <div class="figura">
-        <svg width="240" height="70" viewBox="0 0 240 70" aria-label="Reta">
+        <svg width="240" height="70" viewBox="0 0 240 70">
           <line x1="30" y1="35" x2="210" y2="35" stroke="#111827" stroke-width="4"/>
           <polygon points="30,35 45,27 45,43" fill="#111827"/>
           <polygon points="210,35 195,27 195,43" fill="#111827"/>
@@ -379,7 +361,7 @@
     function figCylinder(){
       return `
       <div class="figura">
-        <svg width="160" height="180" viewBox="0 0 160 180" aria-label="Cilindro">
+        <svg width="160" height="180" viewBox="0 0 160 180">
           <ellipse cx="80" cy="30" rx="45" ry="18" fill="none" stroke="#111827" stroke-width="4"/>
           <line x1="35" y1="30" x2="35" y2="140" stroke="#111827" stroke-width="4"/>
           <line x1="125" y1="30" x2="125" y2="140" stroke="#111827" stroke-width="4"/>
@@ -391,7 +373,7 @@
     function figCone(){
       return `
       <div class="figura">
-        <svg width="160" height="180" viewBox="0 0 160 180" aria-label="Cone">
+        <svg width="160" height="180" viewBox="0 0 160 180">
           <line x1="80" y1="18" x2="35" y2="140" stroke="#111827" stroke-width="4"/>
           <line x1="80" y1="18" x2="125" y2="140" stroke="#111827" stroke-width="4"/>
           <ellipse cx="80" cy="140" rx="45" ry="18" fill="none" stroke="#111827" stroke-width="4"/>
@@ -402,7 +384,7 @@
     function figSphere(){
       return `
       <div class="figura">
-        <svg width="160" height="160" viewBox="0 0 160 160" aria-label="Esfera">
+        <svg width="160" height="160" viewBox="0 0 160 160">
           <circle cx="80" cy="80" r="50" fill="none" stroke="#111827" stroke-width="4"/>
           <ellipse cx="80" cy="80" rx="35" ry="50" fill="none" stroke="#9ca3af" stroke-width="2"/>
           <ellipse cx="80" cy="80" rx="50" ry="20" fill="none" stroke="#9ca3af" stroke-width="2"/>
@@ -413,7 +395,7 @@
     function figPyramid(){
       return `
       <div class="figura">
-        <svg width="180" height="150" viewBox="0 0 180 150" aria-label="Pirâmide">
+        <svg width="180" height="150" viewBox="0 0 180 150">
           <polygon points="90,20 40,120 140,120" fill="none" stroke="#111827" stroke-width="4"/>
           <line x1="90" y1="20" x2="90" y2="120" stroke="#111827" stroke-width="4"/>
           <line x1="40" y1="120" x2="90" y2="95" stroke="#111827" stroke-width="3"/>
@@ -422,28 +404,28 @@
       </div>`;
     }
 
-const vfPerguntas = [
-  { texto:"Uma figura unidimensional possui apenas comprimento.", resposta:"V", tema:"Dimensões" },
-  { texto:"Uma figura bidimensional possui comprimento e largura.", resposta:"V", tema:"Dimensões" },
-  { texto:"Uma figura tridimensional possui comprimento, largura e altura.", resposta:"V", tema:"Dimensões" },
-  { texto:"Um ponto possui dimensão.", resposta:"F", tema:"Conceitos básicos" },
-  { texto:"Uma reta possui começo e fim.", resposta:"F", tema:"Conceitos básicos" },
-  { texto:"Um segmento de reta possui duas extremidades.", resposta:"V", tema:"Conceitos básicos" },
-  { texto:"Uma semirreta possui duas extremidades.", resposta:"F", tema:"Conceitos básicos" },
-  { texto:"Um triângulo possui quatro lados.", resposta:"F", tema:"Polígonos" },
-  { texto:"Um quadrilátero possui quatro lados.", resposta:"V", tema:"Polígonos" },
-  { texto:"Um pentágono possui cinco lados.", resposta:"V", tema:"Polígonos" },
-  { texto:"Um hexágono possui cinco lados.", resposta:"F", tema:"Polígonos" },
-  { texto:"Um círculo é uma figura tridimensional.", resposta:"F", tema:"2D e 3D" },
-  { texto:"Uma esfera é uma figura tridimensional.", resposta:"V", tema:"Sólidos" },
-  { texto:"Um cilindro é uma figura plana.", resposta:"F", tema:"Sólidos" },
-  { texto:"Um cone possui base circular.", resposta:"V", tema:"Sólidos" },
-  { texto:"Um bloco retangular possui seis faces.", resposta:"V", tema:"Sólidos" },
-  { texto:"O perímetro é a soma das medidas dos lados de uma figura.", resposta:"V", tema:"Medidas" },
-  { texto:"1 metro é igual a 10 centímetros.", resposta:"F", tema:"Medidas" },
-  { texto:"1 centímetro = 10 milímetros.", resposta:"V", tema:"Medidas" },
-  { texto:"1 quilômetro = 100 metros.", resposta:"F", tema:"Medidas" }
-];
+    const vfPerguntas = [
+      { texto:"Uma figura unidimensional possui apenas comprimento.", resposta:"V", tema:"Dimensões" },
+      { texto:"Uma figura bidimensional possui comprimento e largura.", resposta:"V", tema:"Dimensões" },
+      { texto:"Uma figura tridimensional possui comprimento, largura e altura.", resposta:"V", tema:"Dimensões" },
+      { texto:"Um ponto possui dimensão.", resposta:"F", tema:"Conceitos básicos" },
+      { texto:"Uma reta possui começo e fim.", resposta:"F", tema:"Conceitos básicos" },
+      { texto:"Um segmento de reta possui duas extremidades.", resposta:"V", tema:"Conceitos básicos" },
+      { texto:"Uma semirreta possui duas extremidades.", resposta:"F", tema:"Conceitos básicos" },
+      { texto:"Um triângulo possui quatro lados.", resposta:"F", tema:"Polígonos" },
+      { texto:"Um quadrilátero possui quatro lados.", resposta:"V", tema:"Polígonos" },
+      { texto:"Um pentágono possui cinco lados.", resposta:"V", tema:"Polígonos" },
+      { texto:"Um hexágono possui cinco lados.", resposta:"F", tema:"Polígonos" },
+      { texto:"Um círculo é uma figura tridimensional.", resposta:"F", tema:"2D e 3D" },
+      { texto:"Uma esfera é uma figura tridimensional.", resposta:"V", tema:"Sólidos" },
+      { texto:"Um cilindro é uma figura plana.", resposta:"F", tema:"Sólidos" },
+      { texto:"Um cone possui base circular.", resposta:"V", tema:"Sólidos" },
+      { texto:"Um bloco retangular possui seis faces.", resposta:"V", tema:"Sólidos" },
+      { texto:"O perímetro é a soma das medidas dos lados de uma figura.", resposta:"V", tema:"Medidas" },
+      { texto:"1 metro é igual a 10 centímetros.", resposta:"F", tema:"Medidas" },
+      { texto:"1 centímetro = 10 milímetros.", resposta:"V", tema:"Medidas" },
+      { texto:"1 quilômetro = 100 metros.", resposta:"F", tema:"Medidas" }
+    ];
 
     const multiplaPerguntas = [
       {
@@ -677,22 +659,41 @@ const vfPerguntas = [
       vfPerguntas.forEach((q, i) => {
         desempenhoTema[q.tema].total++;
         const marcada = document.querySelector(`input[name="vf${i}"]:checked`);
+
         if (marcada && marcada.value === q.resposta) {
           acertos++;
           desempenhoTema[q.tema].certas++;
         } else {
-          errosLista.push(`VF ${i + 1}: ${q.texto}`);
+          const respostaAluno = marcada ? marcada.value : "Não respondeu";
+          errosLista.push(`
+            <li>
+              <strong>VF ${i + 1}:</strong> ${q.texto}<br>
+              <span class="small">Resposta do aluno: <b>${respostaAluno}</b> | Resposta correta: <b>${q.resposta}</b></span>
+            </li>
+          `);
         }
       });
 
       multiplaPerguntas.forEach((q, i) => {
         desempenhoTema[q.tema].total++;
         const marcada = document.querySelector(`input[name="m${i}"]:checked`);
+
         if (marcada && Number(marcada.value) === q.correta) {
           acertos++;
           desempenhoTema[q.tema].certas++;
         } else {
-          errosLista.push(`Múltipla ${i + 1}: ${q.texto}`);
+          const respostaAluno = marcada
+            ? `${String.fromCharCode(65 + Number(marcada.value))}) ${q.alternativas[Number(marcada.value)]}`
+            : "Não respondeu";
+
+          const respostaCorreta = `${String.fromCharCode(65 + q.correta)}) ${q.alternativas[q.correta]}`;
+
+          errosLista.push(`
+            <li>
+              <strong>Múltipla ${i + 1}:</strong> ${q.texto}<br>
+              <span class="small">Resposta do aluno: <b>${respostaAluno}</b><br>Resposta correta: <b>${respostaCorreta}</b></span>
+            </li>
+          `);
         }
       });
 
@@ -725,7 +726,7 @@ const vfPerguntas = [
       if (errosLista.length === 0) {
         errosHtml = `<p class="small">Nenhum erro. Excelente resultado.</p>`;
       } else {
-        errosHtml = `<ul>${errosLista.map(e => `<li>${e}</li>`).join("")}</ul>`;
+        errosHtml = `<ul>${errosLista.join("")}</ul>`;
       }
 
       let topicosHtml = "";
