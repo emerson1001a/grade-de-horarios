@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulado de Química</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --primary:#2563eb;
+      --primary-dark:#1d4ed8;
+      --ok:#15803d;
+      --warn:#b45309;
+      --bad:#b91c1c;
+      --line:#dbe4f0;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%, #eef4fa 100%);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:980px;
+      margin:0 auto;
+      padding:28px 18px 60px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#2563eb,#1e40af);
+      color:white;
+      padding:28px;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 42px);
+    }
+
+    .hero p{
+      margin:0;
+      line-height:1.6;
+      color:rgba(255,255,255,.92);
+    }
+
+    .section-title{
+      margin:28px 0 14px;
+      font-size:24px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      margin-top:-4px;
+      margin-bottom:16px;
+    }
+
+    .pergunta{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      margin-bottom:14px;
+    }
+
+    .pergunta strong{
+      display:block;
+      margin-bottom:12px;
+      line-height:1.5;
+    }
+
+    .opcao{
+      display:block;
+      padding:8px 0;
+      line-height:1.5;
+    }
+
+    .acoes{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:14px 22px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:white;
+    }
+
+    .btn-primary:hover{
+      background:var(--primary-dark);
+    }
+
+    .btn-secondary{
+      background:white;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+
+    .btn-secondary:hover{
+      background:#f8fafc;
+    }
+
+    #resultado{
+      display:none;
+      margin-top:28px;
+      background:white;
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:14px;
+      margin:18px 0 20px;
+    }
+
+    .mini-card{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .mini-card h3{
+      margin:0 0 8px;
+      font-size:15px;
+      color:var(--muted);
+    }
+
+    .mini-card .valor{
+      font-size:28px;
+      font-weight:800;
+    }
+
+    .diagnostico{
+      padding:16px;
+      border-radius:16px;
+      margin:18px 0;
+      line-height:1.6;
+      border:1px solid var(--line);
+      background:#f9fafb;
+    }
+
+    .topicos, .erros{
+      margin-top:20px;
+    }
+
+    .topicos ul, .erros ul{
+      margin:10px 0 0 20px;
+      line-height:1.6;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .tag-ok{
+      background:#dcfce7;
+      color:#166534;
+    }
+
+    .tag-warn{
+      background:#fef3c7;
+      color:#92400e;
+    }
+
+    .tag-bad{
+      background:#fee2e2;
+      color:#991b1b;
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .tema-boxes{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .tema-box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:#fbfdff;
+    }
+
+    .tema-box h4{
+      margin:0 0 8px;
+      font-size:16px;
+    }
+
+    .tema-box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    @media (max-width: 800px){
+      .cards, .tema-boxes{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Simulado de Química</h1>
+      <p>
+        Responda as questões e clique em <strong>Corrigir prova</strong>.
+        No final, o sistema mostrará desempenho, diagnóstico e o que o aluno precisa revisar.
+      </p>
+    </div>
+
+    <h2 class="section-title">Parte 1 — Verdadeiro ou Falso</h2>
+    <p class="subtitle">Marque V para verdadeiro e F para falso.</p>
+    <div id="vf"></div>
+
+    <h2 class="section-title">Parte 2 — Múltipla escolha</h2>
+    <p class="subtitle">Marque a alternativa correta.</p>
+    <div id="multipla"></div>
+
+    <div class="acoes">
+      <button class="btn-primary" onclick="corrigir()">Corrigir prova</button>
+      <button class="btn-secondary" onclick="window.print()">Imprimir / Salvar PDF</button>
+    </div>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    const vfPerguntas = [
+      { texto:"Matéria apresenta massa.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Matéria ocupa lugar no espaço.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Energia ocupa lugar no espaço.", resposta:"F", tema:"Matéria e energia" },
+      { texto:"Luz é um exemplo de energia.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Som é um exemplo de energia.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Calor é um exemplo de energia.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Um tijolo é matéria.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Um lápis é matéria.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"O som possui massa.", resposta:"F", tema:"Matéria e energia" },
+      { texto:"O ar é considerado matéria.", resposta:"V", tema:"Matéria e energia" },
+      { texto:"Uma substância química é o material do qual os objetos são feitos.", resposta:"V", tema:"Substância e objeto" },
+      { texto:"Um prego é um objeto feito da substância ferro.", resposta:"V", tema:"Substância e objeto" },
+      { texto:"Um mesmo objeto pode ser feito de substâncias diferentes.", resposta:"V", tema:"Substância e objeto" },
+      { texto:"Uma mesma substância pode formar objetos diferentes.", resposta:"V", tema:"Substância e objeto" },
+      { texto:"A química estuda os materiais e suas transformações.", resposta:"V", tema:"Química e natureza" },
+      { texto:"O oxigênio pode ser encontrado no ar atmosférico.", resposta:"V", tema:"Química e natureza" },
+      { texto:"A clorofila é encontrada nas plantas verdes.", resposta:"V", tema:"Química e natureza" },
+      { texto:"A matéria pode existir em três estados físicos principais.", resposta:"V", tema:"Estados físicos" },
+      { texto:"O estado líquido possui forma própria fixa.", resposta:"F", tema:"Estados físicos" },
+      { texto:"O estado gasoso ocupa todo o volume do recipiente.", resposta:"V", tema:"Estados físicos" }
+    ];
+
+    const multiplaPerguntas = [
+      { 
+        texto:"A matéria é tudo que:",
+        alternativas:["produz luz","tem massa e ocupa lugar no espaço","é invisível","é energia"],
+        correta:1,
+        tema:"Matéria e energia"
+      },
+      { 
+        texto:"Qual dos itens abaixo é matéria?",
+        alternativas:["luz","calor","som","lápis"],
+        correta:3,
+        tema:"Matéria e energia"
+      },
+      { 
+        texto:"Qual dos itens abaixo é energia?",
+        alternativas:["caderno","mesa","som","tijolo"],
+        correta:2,
+        tema:"Matéria e energia"
+      },
+      { 
+        texto:"Qual destes exemplos representa energia?",
+        alternativas:["pedra","calor","madeira","vidro"],
+        correta:1,
+        tema:"Matéria e energia"
+      },
+      { 
+        texto:"Um exemplo de matéria é:",
+        alternativas:["luz","calor","som","tijolo"],
+        correta:3,
+        tema:"Matéria e energia"
+      },
+      { 
+        texto:"O ar é considerado matéria porque:",
+        alternativas:["produz luz","tem massa e ocupa espaço","é invisível","não possui peso"],
+        correta:1,
+        tema:"Matéria e energia"
+      },
+      { 
+        texto:"Uma substância química é:",
+        alternativas:["um objeto","o material de que os objetos são feitos","energia","luz"],
+        correta:1,
+        tema:"Substância e objeto"
+      },
+      { 
+        texto:"No exemplo 'prego de ferro', o prego é:",
+        alternativas:["a substância","o objeto","energia","gás"],
+        correta:1,
+        tema:"Substância e objeto"
+      },
+      { 
+        texto:"No exemplo 'prego de ferro', o ferro é:",
+        alternativas:["objeto","substância","energia","matéria invisível"],
+        correta:1,
+        tema:"Substância e objeto"
+      },
+      { 
+        texto:"Um mesmo objeto pode ser feito de:",
+        alternativas:["apenas uma substância","substâncias diferentes","apenas ferro","apenas madeira"],
+        correta:1,
+        tema:"Substância e objeto"
+      },
+      { 
+        texto:"O oxigênio é encontrado principalmente:",
+        alternativas:["no solo","no ar atmosférico","na madeira","no ferro"],
+        correta:1,
+        tema:"Química e natureza"
+      },
+      { 
+        texto:"A clorofila é encontrada em:",
+        alternativas:["animais","plantas verdes","pedras","metais"],
+        correta:1,
+        tema:"Química e natureza"
+      },
+      { 
+        texto:"A química estuda:",
+        alternativas:["apenas os planetas","os materiais e suas transformações","apenas a energia","apenas os gases"],
+        correta:1,
+        tema:"Química e natureza"
+      },
+      { 
+        texto:"O estado da matéria que possui forma definida é:",
+        alternativas:["gasoso","líquido","sólido","vapor"],
+        correta:2,
+        tema:"Estados físicos"
+      },
+      { 
+        texto:"O estado da matéria que toma a forma do recipiente é:",
+        alternativas:["sólido","líquido","pedra","metal"],
+        correta:1,
+        tema:"Estados físicos"
+      },
+      { 
+        texto:"O estado gasoso:",
+        alternativas:["tem forma fixa","ocupa todo o recipiente","não ocupa espaço","não possui volume"],
+        correta:1,
+        tema:"Estados físicos"
+      },
+      { 
+        texto:"Qual exemplo representa o estado sólido?",
+        alternativas:["ar","água","tijolo","vapor"],
+        correta:2,
+        tema:"Estados físicos"
+      },
+      { 
+        texto:"Qual exemplo representa o estado líquido?",
+        alternativas:["água","pedra","ferro","ar"],
+        correta:0,
+        tema:"Estados físicos"
+      },
+      { 
+        texto:"Qual exemplo representa o estado gasoso?",
+        alternativas:["gelo","ferro","ar","vidro"],
+        correta:2,
+        tema:"Estados físicos"
+      },
+      { 
+        texto:"Um líquido:",
+        alternativas:["tem forma própria","toma a forma do recipiente","ocupa todo o recipiente","não possui volume"],
+        correta:1,
+        tema:"Estados físicos"
+      }
+    ];
+
+    const temas = [
+      "Matéria e energia",
+      "Substância e objeto",
+      "Química e natureza",
+      "Estados físicos"
+    ];
+
+    function carregar() {
+      const vfDiv = document.getElementById("vf");
+      vfPerguntas.forEach((q, i) => {
+        vfDiv.innerHTML += `
+          <div class="pergunta">
+            <strong>${i + 1}. ${q.texto}</strong>
+            <label class="opcao"><input type="radio" name="vf${i}" value="V"> V</label>
+            <label class="opcao"><input type="radio" name="vf${i}" value="F"> F</label>
+          </div>
+        `;
+      });
+
+      const multiplaDiv = document.getElementById("multipla");
+      multiplaPerguntas.forEach((q, i) => {
+        let html = `
+          <div class="pergunta">
+            <strong>${i + 1}. ${q.texto}</strong>
+        `;
+        q.alternativas.forEach((alt, j) => {
+          html += `
+            <label class="opcao">
+              <input type="radio" name="m${i}" value="${j}">
+              ${String.fromCharCode(65 + j)}) ${alt}
+            </label>
+          `;
+        });
+        html += `</div>`;
+        multiplaDiv.innerHTML += html;
+      });
+    }
+
+    function diagnosticoGeral(percentual) {
+      if (percentual < 40) {
+        return {
+          classe: "tag-bad",
+          rotulo: "Precisa reforçar bastante",
+          texto: "O aluno ainda não consolidou os conceitos básicos. É importante revisar com calma matéria, energia, substância e estados físicos."
+        };
+      } else if (percentual < 70) {
+        return {
+          classe: "tag-warn",
+          rotulo: "Entendimento parcial",
+          texto: "O aluno já entendeu parte do conteúdo, mas ainda apresenta lacunas. Precisa revisar os pontos em que mais errou antes de avançar."
+        };
+      } else if (percentual < 90) {
+        return {
+          classe: "tag-ok",
+          rotulo: "Bom domínio",
+          texto: "O aluno demonstra boa compreensão do conteúdo, mas ainda há pequenos pontos para reforçar e ganhar mais segurança."
+        };
+      } else {
+        return {
+          classe: "tag-ok",
+          rotulo: "Excelente desempenho",
+          texto: "O aluno demonstra domínio sólido dos conceitos iniciais de química. O ideal agora é manter a revisão e consolidar a base."
+        };
+      }
+    }
+
+    function sugestaoPorTema(tema, perc) {
+      if (perc < 50) {
+        if (tema === "Matéria e energia") return "Revisar a diferença entre matéria e energia, com exemplos práticos do dia a dia.";
+        if (tema === "Substância e objeto") return "Treinar a diferença entre objeto e substância, usando exemplos como ferro, madeira, vidro e plástico.";
+        if (tema === "Química e natureza") return "Revisar onde aparecem o oxigênio, a clorofila e o papel da química no estudo dos materiais.";
+        if (tema === "Estados físicos") return "Reforçar sólido, líquido e gasoso, principalmente forma e volume de cada estado.";
+      }
+      return "Tema razoavelmente compreendido, mas ainda vale uma revisão curta para consolidar.";
+    }
+
+    function corrigir() {
+      let acertos = 0;
+      let total = vfPerguntas.length + multiplaPerguntas.length;
+      let errosLista = [];
+      let desempenhoTema = {};
+
+      temas.forEach(t => {
+        desempenhoTema[t] = { certas: 0, total: 0 };
+      });
+
+      vfPerguntas.forEach((q, i) => {
+        desempenhoTema[q.tema].total++;
+        const marcada = document.querySelector(`input[name="vf${i}"]:checked`);
+        if (marcada && marcada.value === q.resposta) {
+          acertos++;
+          desempenhoTema[q.tema].certas++;
+        } else {
+          errosLista.push(`VF ${i + 1}: ${q.texto}`);
+        }
+      });
+
+      multiplaPerguntas.forEach((q, i) => {
+        desempenhoTema[q.tema].total++;
+        const marcada = document.querySelector(`input[name="m${i}"]:checked`);
+        if (marcada && Number(marcada.value) === q.correta) {
+          acertos++;
+          desempenhoTema[q.tema].certas++;
+        } else {
+          errosLista.push(`Múltipla ${i + 1}: ${q.texto}`);
+        }
+      });
+
+      const percentual = Math.round((acertos / total) * 100);
+      const diag = diagnosticoGeral(percentual);
+
+      let temasHtml = "";
+      let topicosParaEstudar = [];
+
+      temas.forEach(tema => {
+        const dados = desempenhoTema[tema];
+        const percTema = Math.round((dados.certas / dados.total) * 100);
+
+        if (percTema < 70) {
+          topicosParaEstudar.push(`${tema}: ${sugestaoPorTema(tema, percTema)}`);
+        }
+
+        temasHtml += `
+          <div class="tema-box">
+            <h4>${tema}</h4>
+            <p><strong>${dados.certas} de ${dados.total}</strong> • ${percTema}% de aproveitamento</p>
+            <p>${sugestaoPorTema(tema, percTema)}</p>
+          </div>
+        `;
+      });
+
+      let errosHtml = "";
+      if (errosLista.length === 0) {
+        errosHtml = `<p class="small">Nenhum erro. Excelente resultado.</p>`;
+      } else {
+        errosHtml = `<ul>${errosLista.map(e => `<li>${e}</li>`).join("")}</ul>`;
+      }
+
+      let topicosHtml = "";
+      if (topicosParaEstudar.length === 0) {
+        topicosHtml = `<p class="small">Não há tópicos críticos. O aluno está com a base muito bem construída.</p>`;
+      } else {
+        topicosHtml = `<ul>${topicosParaEstudar.map(t => `<li>${t}</li>`).join("")}</ul>`;
+      }
+
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.style.display = "block";
+      resultadoDiv.innerHTML = `
+        <h2>Resultado do aluno</h2>
+
+        <span class="tag ${diag.classe}">${diag.rotulo}</span>
+
+        <div class="cards">
+          <div class="mini-card">
+            <h3>Acertos</h3>
+            <div class="valor">${acertos}/${total}</div>
+          </div>
+          <div class="mini-card">
+            <h3>Desempenho</h3>
+            <div class="valor">${percentual}%</div>
+          </div>
+          <div class="mini-card">
+            <h3>Leitura pedagógica</h3>
+            <div class="valor" style="font-size:18px;">${diag.rotulo}</div>
+          </div>
+        </div>
+
+        <div class="diagnostico">
+          <strong>Diagnóstico geral:</strong><br>
+          ${diag.texto}
+        </div>
+
+        <div class="topicos">
+          <h3>O que precisa estudar</h3>
+          ${topicosHtml}
+        </div>
+
+        <div class="topicos">
+          <h3>Desempenho por tema</h3>
+          <div class="tema-boxes">
+            ${temasHtml}
+          </div>
+        </div>
+
+        <div class="erros">
+          <h3>Questões erradas ou não respondidas</h3>
+          ${errosHtml}
+        </div>
+      `;
+
+      resultadoDiv.scrollIntoView({ behavior: "smooth" });
+    }
+
+    carregar();
+  </script>
+</body>
+</html>
