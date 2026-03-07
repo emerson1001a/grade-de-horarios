@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Science BIS Test — Cells</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#6b7280;
+      --primary:#2563eb;
+      --primary-dark:#1d4ed8;
+      --ok:#15803d;
+      --warn:#b45309;
+      --bad:#b91c1c;
+      --line:#dbe4f0;
+      --shadow:0 8px 24px rgba(0,0,0,.08);
+      --radius:16px;
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      font-family:Arial, Helvetica, sans-serif;
+      background:linear-gradient(180deg,#f8fbff 0%, #eef4fa 100%);
+      color:var(--text);
+    }
+
+    .container{
+      max-width:1000px;
+      margin:0 auto;
+      padding:28px 18px 60px;
+    }
+
+    .hero{
+      background:linear-gradient(135deg,#2563eb,#1e40af);
+      color:white;
+      padding:28px;
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      margin-bottom:24px;
+    }
+
+    .hero h1{
+      margin:0 0 10px;
+      font-size:clamp(28px, 4vw, 42px);
+    }
+
+    .hero p{
+      margin:0;
+      line-height:1.6;
+      color:rgba(255,255,255,.92);
+    }
+
+    .student-box{
+      background:white;
+      border:1px solid var(--line);
+      border-radius:18px;
+      box-shadow:var(--shadow);
+      padding:18px;
+      margin-bottom:24px;
+    }
+
+    .student-box label{
+      display:block;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+
+    .student-box input{
+      width:100%;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid var(--line);
+      font-size:16px;
+    }
+
+    .section-title{
+      margin:28px 0 14px;
+      font-size:24px;
+    }
+
+    .subtitle{
+      color:var(--muted);
+      margin-top:-4px;
+      margin-bottom:16px;
+      line-height:1.6;
+    }
+
+    .pergunta{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+      margin-bottom:14px;
+    }
+
+    .pergunta strong{
+      display:block;
+      margin-bottom:12px;
+      line-height:1.5;
+    }
+
+    .opcao{
+      display:block;
+      padding:8px 0;
+      line-height:1.5;
+    }
+
+    .acoes{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:24px;
+    }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:14px 22px;
+      font-size:16px;
+      font-weight:700;
+      cursor:pointer;
+      transition:.15s ease;
+    }
+
+    .btn-primary{
+      background:var(--primary);
+      color:white;
+    }
+
+    .btn-primary:hover{
+      background:var(--primary-dark);
+    }
+
+    .btn-secondary{
+      background:white;
+      color:var(--text);
+      border:1px solid var(--line);
+    }
+
+    .btn-secondary:hover{
+      background:#f8fafc;
+    }
+
+    #resultado{
+      display:none;
+      margin-top:28px;
+      background:white;
+      border:1px solid var(--line);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:22px;
+    }
+
+    .cards{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:14px;
+      margin:18px 0 20px;
+    }
+
+    .mini-card{
+      background:#f8fbff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:16px;
+    }
+
+    .mini-card h3{
+      margin:0 0 8px;
+      font-size:15px;
+      color:var(--muted);
+    }
+
+    .mini-card .valor{
+      font-size:28px;
+      font-weight:800;
+    }
+
+    .diagnostico{
+      padding:16px;
+      border-radius:16px;
+      margin:18px 0;
+      line-height:1.6;
+      border:1px solid var(--line);
+      background:#f9fafb;
+    }
+
+    .topicos, .erros{
+      margin-top:20px;
+    }
+
+    .topicos ul, .erros ul{
+      margin:10px 0 0 20px;
+      line-height:1.8;
+    }
+
+    .tag{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      margin-bottom:10px;
+    }
+
+    .tag-ok{
+      background:#dcfce7;
+      color:#166534;
+    }
+
+    .tag-warn{
+      background:#fef3c7;
+      color:#92400e;
+    }
+
+    .tag-bad{
+      background:#fee2e2;
+      color:#991b1b;
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.6;
+    }
+
+    .tema-boxes{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .tema-box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:14px;
+      background:#fbfdff;
+    }
+
+    .tema-box h4{
+      margin:0 0 8px;
+      font-size:16px;
+    }
+
+    .tema-box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+
+    @media (max-width: 800px){
+      .cards, .tema-boxes{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media print{
+      .acoes{display:none}
+      body{background:white}
+      .hero{background:#1e40af !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>Science BIS Test — Cells</h1>
+      <p>
+        Answer the questions and click <strong>Check Test</strong>.
+        At the end, the system will show score, performance by topic,
+        a diagnostic and what the student should review.
+      </p>
+    </div>
+
+    <div class="student-box">
+      <label for="studentName">Student name</label>
+      <input id="studentName" type="text" placeholder="Type the student's name" />
+    </div>
+
+    <h2 class="section-title">Part 1 — True or False</h2>
+    <p class="subtitle">Mark T for true and F for false.</p>
+    <div id="tf"></div>
+
+    <h2 class="section-title">Part 2 — Multiple Choice</h2>
+    <p class="subtitle">Choose the correct alternative.</p>
+    <div id="multiple"></div>
+
+    <div class="acoes">
+      <button class="btn-primary" onclick="corrigir()">Check Test</button>
+      <button class="btn-secondary" onclick="window.print()">Print / Save PDF</button>
+    </div>
+
+    <div id="resultado"></div>
+  </div>
+
+  <script>
+    const tfPerguntas = [
+      { texto:"All living things are made of cells.", resposta:"T", tema:"Basic cell theory" },
+      { texto:"Cells can only be seen with the naked eye.", resposta:"F", tema:"Basic cell theory" },
+      { texto:"A microscope helps us see very small cells.", resposta:"T", tema:"Basic cell theory" },
+      { texto:"The nucleus controls the activities of the cell.", resposta:"T", tema:"Cell parts and functions" },
+      { texto:"The cytoplasm is where most chemical reactions happen.", resposta:"T", tema:"Cell parts and functions" },
+      { texto:"The cell membrane controls what enters and leaves the cell.", resposta:"T", tema:"Cell parts and functions" },
+      { texto:"Animal cells have a cell wall.", resposta:"F", tema:"Plant and animal cells" },
+      { texto:"Plant cells have chloroplasts.", resposta:"T", tema:"Plant and animal cells" },
+      { texto:"Chlorophyll absorbs light for photosynthesis.", resposta:"T", tema:"Plant and animal cells" },
+      { texto:"Plant cells and animal cells both have a nucleus.", resposta:"T", tema:"Plant and animal cells" },
+      { texto:"Red blood cells carry oxygen.", resposta:"T", tema:"Specialised cells" },
+      { texto:"Neurones carry electrical signals.", resposta:"T", tema:"Specialised cells" },
+      { texto:"Ciliated cells help move dust and mucus out of the lungs.", resposta:"T", tema:"Specialised cells" },
+      { texto:"A tissue is a group of similar cells working together.", resposta:"T", tema:"Levels of organisation" },
+      { texto:"An organ is made of only one type of tissue.", resposta:"F", tema:"Levels of organisation" }
+    ];
+
+    const multiplaPerguntas = [
+      {
+        texto:"What is the basic unit of life?",
+        alternativas:["organ","cell","tissue","system"],
+        correta:1,
+        tema:"Basic cell theory"
+      },
+      {
+        texto:"Which tool helps us see very small cells?",
+        alternativas:["ruler","thermometer","microscope","telescope"],
+        correta:2,
+        tema:"Basic cell theory"
+      },
+      {
+        texto:"Which part of the cell controls the cell activities?",
+        alternativas:["nucleus","cell wall","vacuole","chloroplast"],
+        correta:0,
+        tema:"Cell parts and functions"
+      },
+      {
+        texto:"Where do most chemical reactions happen in a cell?",
+        alternativas:["cytoplasm","cell membrane","nucleus","chlorophyll"],
+        correta:0,
+        tema:"Cell parts and functions"
+      },
+      {
+        texto:"What controls what enters and leaves the cell?",
+        alternativas:["nucleus","cell membrane","cytoplasm","vacuole"],
+        correta:1,
+        tema:"Cell parts and functions"
+      },
+      {
+        texto:"Which structure is found in plant cells but not in animal cells?",
+        alternativas:["nucleus","cell membrane","cell wall","cytoplasm"],
+        correta:2,
+        tema:"Plant and animal cells"
+      },
+      {
+        texto:"Which part carries out photosynthesis?",
+        alternativas:["vacuole","chloroplast","nucleus","membrane"],
+        correta:1,
+        tema:"Plant and animal cells"
+      },
+      {
+        texto:"What does chlorophyll do?",
+        alternativas:["carry oxygen","absorb light","send signals","move mucus"],
+        correta:1,
+        tema:"Plant and animal cells"
+      },
+      {
+        texto:"Which part of a plant cell is usually larger than in an animal cell?",
+        alternativas:["small vacuole","large vacuole","chlorophyll","rib"],
+        correta:1,
+        tema:"Plant and animal cells"
+      },
+      {
+        texto:"Which specialised cell carries oxygen around the body?",
+        alternativas:["neurone","ciliated cell","red blood cell","root hair cell"],
+        correta:2,
+        tema:"Specialised cells"
+      },
+      {
+        texto:"Which specialised cell carries electrical signals?",
+        alternativas:["neurone","palisade cell","red blood cell","sperm cell"],
+        correta:0,
+        tema:"Specialised cells"
+      },
+      {
+        texto:"Which cell helps clean the lungs?",
+        alternativas:["ciliated cell","red blood cell","root hair cell","egg cell"],
+        correta:0,
+        tema:"Specialised cells"
+      },
+      {
+        texto:"What does a root hair cell do?",
+        alternativas:["carry oxygen","absorb water","send signals","move dust"],
+        correta:1,
+        tema:"Specialised cells"
+      },
+      {
+        texto:"Which specialised plant cell is full of chloroplasts?",
+        alternativas:["root hair cell","palisade cell","red blood cell","neurone"],
+        correta:1,
+        tema:"Specialised cells"
+      },
+      {
+        texto:"What is a tissue?",
+        alternativas:[
+          "a single organ",
+          "a group of similar cells working together",
+          "a group of organs",
+          "a whole organism"
+        ],
+        correta:1,
+        tema:"Levels of organisation"
+      },
+      {
+        texto:"What is an organ?",
+        alternativas:[
+          "a single cell",
+          "a group of similar cells",
+          "a structure made of different tissues",
+          "a group of systems"
+        ],
+        correta:2,
+        tema:"Levels of organisation"
+      },
+      {
+        texto:"What is an organ system?",
+        alternativas:[
+          "one large cell",
+          "a group of tissues",
+          "a group of organs working together",
+          "a whole organism"
+        ],
+        correta:2,
+        tema:"Levels of organisation"
+      },
+      {
+        texto:"Which sequence is correct?",
+        alternativas:[
+          "Cells → Tissues → Organs → Organ systems → Organism",
+          "Tissues → Cells → Organism → Organs → Systems",
+          "Cells → Organs → Tissues → Organism → Systems",
+          "Organs → Cells → Tissues → Systems → Organism"
+        ],
+        correta:0,
+        tema:"Levels of organisation"
+      },
+      {
+        texto:"The heart is an example of a:",
+        alternativas:["cell","tissue","organ","system"],
+        correta:2,
+        tema:"Levels of organisation"
+      },
+      {
+        texto:"The circulatory system is an example of a:",
+        alternativas:["cell","organ","organ system","tissue"],
+        correta:2,
+        tema:"Levels of organisation"
+      },
+      {
+        texto:"Which two parts are found in both plant and animal cells?",
+        alternativas:[
+          "cell wall and chloroplast",
+          "nucleus and cell membrane",
+          "chloroplast and vacuole",
+          "cell wall and vacuole"
+        ],
+        correta:1,
+        tema:"Plant and animal cells"
+      },
+      {
+        texto:"What is the job of the nucleus?",
+        alternativas:[
+          "to absorb light",
+          "to control the cell",
+          "to carry oxygen",
+          "to move mucus"
+        ],
+        correta:1,
+        tema:"Cell parts and functions"
+      },
+      {
+        texto:"Which sentence is correct?",
+        alternativas:[
+          "All cells are exactly the same.",
+          "Specialised cells have different jobs.",
+          "Cells are bigger than organs.",
+          "Plants do not have cells."
+        ],
+        correta:1,
+        tema:"Specialised cells"
+      },
+      {
+        texto:"Which structure makes a plant cell more rigid?",
+        alternativas:["cell wall","nucleus","cytoplasm","cell membrane"],
+        correta:0,
+        tema:"Plant and animal cells"
+      },
+      {
+        texto:"Which statement about microscopes is correct?",
+        alternativas:[
+          "They make cells smaller.",
+          "They help us see tiny cells.",
+          "They replace the nucleus.",
+          "They are a type of cell."
+        ],
+        correta:1,
+        tema:"Basic cell theory"
+      }
+    ];
+
+    const temas = [
+      "Basic cell theory",
+      "Cell parts and functions",
+      "Plant and animal cells",
+      "Specialised cells",
+      "Levels of organisation"
+    ];
+
+    function carregar() {
+      const tfDiv = document.getElementById("tf");
+      tfPerguntas.forEach((q, i) => {
+        tfDiv.innerHTML += `
+          <div class="pergunta">
+            <strong>${i + 1}. ${q.texto}</strong>
+            <label class="opcao"><input type="radio" name="tf${i}" value="T"> True</label>
+            <label class="opcao"><input type="radio" name="tf${i}" value="F"> False</label>
+          </div>
+        `;
+      });
+
+      const multipleDiv = document.getElementById("multiple");
+      multiplaPerguntas.forEach((q, i) => {
+        let html = `
+          <div class="pergunta">
+            <strong>${i + 1}. ${q.texto}</strong>
+        `;
+        q.alternativas.forEach((alt, j) => {
+          html += `
+            <label class="opcao">
+              <input type="radio" name="m${i}" value="${j}">
+              ${String.fromCharCode(65 + j)}) ${alt}
+            </label>
+          `;
+        });
+        html += `</div>`;
+        multipleDiv.innerHTML += html;
+      });
+    }
+
+    function diagnosticoGeral(percentual) {
+      if (percentual < 40) {
+        return {
+          classe: "tag-bad",
+          rotulo: "Needs strong review",
+          texto: "The student still has major gaps in the topic. It is important to review basic cell concepts, cell parts, specialised cells and levels of organisation."
+        };
+      } else if (percentual < 70) {
+        return {
+          classe: "tag-warn",
+          rotulo: "Partial understanding",
+          texto: "The student understands part of the content, but there are still important weaknesses. A focused review is recommended before moving on."
+        };
+      } else if (percentual < 90) {
+        return {
+          classe: "tag-ok",
+          rotulo: "Good understanding",
+          texto: "The student shows good understanding of the topic, with a few gaps that can be fixed through revision and practice."
+        };
+      } else {
+        return {
+          classe: "tag-ok",
+          rotulo: "Excellent performance",
+          texto: "The student shows strong understanding of cells, specialised cells and levels of organisation."
+        };
+      }
+    }
+
+    function sugestaoPorTema(tema, perc) {
+      if (perc >= 70) {
+        return "This topic is reasonably secure. A short review should be enough.";
+      }
+
+      if (tema === "Basic cell theory") return "Review what cells are, why living things are made of cells and why microscopes are needed.";
+      if (tema === "Cell parts and functions") return "Review nucleus, cytoplasm and cell membrane, focusing on the function of each part.";
+      if (tema === "Plant and animal cells") return "Review the differences between plant and animal cells, especially cell wall, chloroplasts, chlorophyll and vacuole.";
+      if (tema === "Specialised cells") return "Revise red blood cells, neurones, ciliated cells, root hair cells and palisade cells, with focus on their functions.";
+      if (tema === "Levels of organisation") return "Review the sequence cells → tissues → organs → organ systems → organism and the meaning of tissue, organ and organ system.";
+      return "Review this topic with examples.";
+    }
+
+    function corrigir() {
+      let acertos = 0;
+      let total = tfPerguntas.length + multiplaPerguntas.length;
+      let errosLista = [];
+      let desempenhoTema = {};
+
+      temas.forEach(t => {
+        desempenhoTema[t] = { certas: 0, total: 0 };
+      });
+
+      tfPerguntas.forEach((q, i) => {
+        desempenhoTema[q.tema].total++;
+        const marcada = document.querySelector(`input[name="tf${i}"]:checked`);
+
+        if (marcada && marcada.value === q.resposta) {
+          acertos++;
+          desempenhoTema[q.tema].certas++;
+        } else {
+          const respostaAluno = marcada ? marcada.value : "No answer";
+          errosLista.push(`
+            <li>
+              <strong>True/False ${i + 1}:</strong> ${q.texto}<br>
+              <span class="small">Student answer: <b>${respostaAluno}</b> | Correct answer: <b>${q.resposta}</b></span>
+            </li>
+          `);
+        }
+      });
+
+      multiplaPerguntas.forEach((q, i) => {
+        desempenhoTema[q.tema].total++;
+        const marcada = document.querySelector(`input[name="m${i}"]:checked`);
+
+        if (marcada && Number(marcada.value) === q.correta) {
+          acertos++;
+          desempenhoTema[q.tema].certas++;
+        } else {
+          const respostaAluno = marcada
+            ? `${String.fromCharCode(65 + Number(marcada.value))}) ${q.alternativas[Number(marcada.value)]}`
+            : "No answer";
+
+          const respostaCorreta = `${String.fromCharCode(65 + q.correta)}) ${q.alternativas[q.correta]}`;
+
+          errosLista.push(`
+            <li>
+              <strong>Multiple Choice ${i + 1}:</strong> ${q.texto}<br>
+              <span class="small">Student answer: <b>${respostaAluno}</b><br>Correct answer: <b>${respostaCorreta}</b></span>
+            </li>
+          `);
+        }
+      });
+
+      const percentual = Math.round((acertos / total) * 100);
+      const diag = diagnosticoGeral(percentual);
+
+      let temasHtml = "";
+      let topicosParaEstudar = [];
+
+      temas.forEach(tema => {
+        const dados = desempenhoTema[tema];
+        if (!dados || dados.total === 0) return;
+
+        const percTema = Math.round((dados.certas / dados.total) * 100);
+
+        if (percTema < 70) {
+          topicosParaEstudar.push(`${tema}: ${sugestaoPorTema(tema, percTema)}`);
+        }
+
+        temasHtml += `
+          <div class="tema-box">
+            <h4>${tema}</h4>
+            <p><strong>${dados.certas} of ${dados.total}</strong> • ${percTema}% success</p>
+            <p>${sugestaoPorTema(tema, percTema)}</p>
+          </div>
+        `;
+      });
+
+      let errosHtml = "";
+      if (errosLista.length === 0) {
+        errosHtml = `<p class="small">No mistakes. Excellent work.</p>`;
+      } else {
+        errosHtml = `<ul>${errosLista.join("")}</ul>`;
+      }
+
+      let topicosHtml = "";
+      if (topicosParaEstudar.length === 0) {
+        topicosHtml = `<p class="small">There are no critical weak points. The student has a strong foundation.</p>`;
+      } else {
+        topicosHtml = `<ul>${topicosParaEstudar.map(t => `<li>${t}</li>`).join("")}</ul>`;
+      }
+
+      const studentName = document.getElementById("studentName").value.trim();
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.style.display = "block";
+      resultadoDiv.innerHTML = `
+        <h2>Student Result${studentName ? ` — ${studentName}` : ""}</h2>
+
+        <span class="tag ${diag.classe}">${diag.rotulo}</span>
+
+        <div class="cards">
+          <div class="mini-card">
+            <h3>Correct Answers</h3>
+            <div class="valor">${acertos}/${total}</div>
+          </div>
+          <div class="mini-card">
+            <h3>Performance</h3>
+            <div class="valor">${percentual}%</div>
+          </div>
+          <div class="mini-card">
+            <h3>Reading</h3>
+            <div class="valor" style="font-size:18px;">${diag.rotulo}</div>
+          </div>
+          <div class="mini-card">
+            <h3>Topic</h3>
+            <div class="valor" style="font-size:18px;">Cells</div>
+          </div>
+        </div>
+
+        <div class="diagnostico">
+          <strong>General diagnostic:</strong><br>
+          ${diag.texto}
+        </div>
+
+        <div class="topicos">
+          <h3>What the student needs to review</h3>
+          ${topicosHtml}
+        </div>
+
+        <div class="topicos">
+          <h3>Performance by topic</h3>
+          <div class="tema-boxes">
+            ${temasHtml}
+          </div>
+        </div>
+
+        <div class="erros">
+          <h3>Wrong or unanswered questions</h3>
+          ${errosHtml}
+        </div>
+      `;
+
+      resultadoDiv.scrollIntoView({ behavior: "smooth" });
+    }
+
+    carregar();
+  </script>
+</body>
+</html>
